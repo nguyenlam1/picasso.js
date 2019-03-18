@@ -1,4 +1,5 @@
 import extract, { getFieldAccessor } from '../extractor-s';
+import betterExtract from '../better-extractor-s';
 import q from '../dataset';
 
 import {
@@ -14091,8 +14092,12 @@ describe('extractor-s', () => {
     }, dataset, cache, deps);
 
     // add tests
-    suite.add('loop', () => {
+    suite.add('forEach extractor', () => {
       extract({
+        field: 'Dim2'
+      }, dataset, cache, deps);
+    }).add('for extractor', () => {
+      betterExtract({
         field: 'Dim2'
       }, dataset, cache, deps);
     }).on('cycle', (event) => {
