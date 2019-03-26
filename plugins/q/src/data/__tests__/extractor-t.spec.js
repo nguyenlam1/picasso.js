@@ -3,11 +3,19 @@ import {
   getFieldDepth
 } from '../extractor-t';
 
+import fasterExtract from '../faster-extractor-t';
+
 import {
   getPropsInfo,
   collect,
   track
 } from '../../../../../packages/picasso.js/src/core/data/util';
+
+import config from './config';
+
+import configCube from './config-cube';
+
+import Benchmark from './benchmark';
 
 describe('q-data-extractor-t', () => {
   const deps = {
@@ -17,317 +25,322 @@ describe('q-data-extractor-t', () => {
   };
 
   describe('without pseudo', () => {
-    const treePages = [
-      {
-        qElemNo: -1,
-        qNodeNr: 0,
-        qParentNode: -1,
-        qRow: 0,
-        qType: 'R',
-        qValues: [],
-        qNodes: [
-          {
-            qText: 'Alcoholic Beverages',
-            qElemNo: 0,
-            qNodeNr: 1,
-            qParentNode: 0,
-            qRow: 0,
-            qType: 'N',
-            qAttrDims: { qValues: [{}, { qElemNo: 3, qText: 'Alco' }] },
-            qValues: [{}, { qValue: 36, qText: '+36' }],
-            qNodes: [
-              {
-                qText: 'Beer',
-                qElemNo: 0,
-                qNodeNr: 4,
-                qParentNode: 1,
-                qRow: 0,
-                qType: 'N',
-                qAttrExps: { qValues: [{ qNum: 3, qText: 'three' }] },
-                qValues: [
-                  {
-                    qText: '6',
-                    qValue: 6
-                  },
-                  {
-                    qText: '$171792',
-                    qValue: 171792
-                  }
-                ],
-                qNodes: []
-              },
-              {
-                qText: 'Wine',
-                qElemNo: 1,
-                qNodeNr: 5,
-                qParentNode: 1,
-                qRow: 1,
-                qType: 'N',
-                qAttrExps: { qValues: [{ qNum: 2, qText: 'two' }] },
-                qValues: [
-                  {
-                    qText: '17',
-                    qValue: 17
-                  },
-                  {
-                    qText: '$195765',
-                    qValue: 195765
-                  }
-                ],
-                qNodes: []
-              }
-            ]
-          },
-          {
-            qText: 'Baked Goods',
-            qElemNo: 1,
-            qNodeNr: 2,
-            qParentNode: 0,
-            qRow: 2,
-            qType: 'N',
-            qAttrDims: { qValues: [{}, { qElemNo: 7, qText: 'Bake' }] },
-            qValues: [{}, { qValue: 31, qText: '+31' }],
-            qNodes: [
-              {
-                qText: 'Bagels',
-                qElemNo: 2,
-                qNodeNr: 6,
-                qParentNode: 2,
-                qRow: 2,
-                qType: 'N',
-                qAttrExps: { qValues: [{ qNum: 5, qText: 'five' }] },
-                qValues: [
-                  {
-                    qText: '2',
-                    qValue: 2
-                  },
-                  {
-                    qText: '$22652',
-                    qValue: 22652
-                  }
-                ],
-                qNodes: []
-              },
-              {
-                qText: 'Muffins',
-                qElemNo: 3,
-                qNodeNr: 7,
-                qParentNode: 2,
-                qRow: 3,
-                qType: 'N',
-                qAttrExps: { qValues: [{ qNum: 7, qText: 'seven' }] },
-                qValues: [
-                  {
-                    qText: '9',
-                    qValue: 9
-                  },
-                  {
-                    qText: '$158937',
-                    qValue: 158937
-                  }
-                ],
-                qNodes: []
-              },
-              {
-                qText: 'Sliced Bread',
-                qElemNo: 4,
-                qNodeNr: 8,
-                qParentNode: 2,
-                qRow: 4,
-                qType: 'N',
-                qAttrExps: { qValues: [{ qNum: 9, qText: 'nine' }] },
-                qValues: [
-                  {
-                    qText: '13',
-                    qValue: 13
-                  },
-                  {
-                    qText: '$110661',
-                    qValue: 110661
-                  }
-                ],
-                qNodes: []
-              }
-            ]
-          }
-        ]
-      }
-    ];
+    const treePages = config.data.qData;
 
-    const cube = {
-      qDimensionInfo: [
-        {
-          qFallbackTitle: 'Product Group',
-          qApprMaxGlyphCount: 19,
-          qCardinal: 17,
-          qSortIndicator: 'A',
-          qGroupFallbackTitles: [
-            'Product Group'
-          ],
-          qGroupPos: 0,
-          qStateCounts: {
-            qLocked: 0,
-            qSelected: 2,
-            qOption: 0,
-            qDeselected: 0,
-            qAlternative: 15,
-            qExcluded: 0,
-            qSelectedExcluded: 0,
-            qLockedExcluded: 0
-          },
-          qTags: [
-            '$ascii',
-            '$text'
-          ],
-          qDimensionType: 'D',
-          qGrouping: 'N',
-          qNumFormat: {
-            qType: 'R',
-            qnDec: 14,
-            qUseThou: 1,
-            qFmt: '##############',
-            qDec: '.',
-            qThou: ','
-          },
-          qIsAutoFormat: true,
-          qGroupFieldDefs: [
-            'Product Group Desc'
-          ],
-          qMin: 'NaN',
-          qMax: 'NaN',
-          qAttrExprInfo: [],
-          qAttrDimInfo: [],
-          qCardinalities: {
-            qCardinal: 17,
-            qHypercubeCardinal: 2
-          },
-          title: 'Product Group',
-          coloring: {
-            colorMapRef: 'rAWLLGj',
-            changeHash: '0.6784502254237292'
-          },
-          autoSort: true,
-          cId: 'XKAuVu',
-          othersLabel: 'Others'
-        },
-        {
-          qFallbackTitle: 'Product Sub Group Desc',
-          qApprMaxGlyphCount: 17,
-          qCardinal: 70,
-          qSortIndicator: 'A',
-          qGroupFallbackTitles: [
-            'Product Sub Group Desc'
-          ],
-          qGroupPos: 0,
-          qStateCounts: {
-            qLocked: 0,
-            qSelected: 0,
-            qOption: 5,
-            qDeselected: 0,
-            qAlternative: 0,
-            qExcluded: 65,
-            qSelectedExcluded: 0,
-            qLockedExcluded: 0
-          },
-          qTags: [
-            '$ascii',
-            '$text'
-          ],
-          qDimensionType: 'D',
-          qGrouping: 'N',
-          qNumFormat: {
-            qType: 'R',
-            qnDec: 14,
-            qUseThou: 1,
-            qFmt: '##############',
-            qDec: '.',
-            qThou: ','
-          },
-          qIsAutoFormat: true,
-          qGroupFieldDefs: [
-            'Product Sub Group Desc'
-          ],
-          qMin: 'NaN',
-          qMax: 'NaN',
-          qAttrExprInfo: [
-            {
-              qMin: 18,
-              qMax: 83,
-              qFallbackTitle: '# of Customers',
-              qMinText: '18',
-              qMaxText: '83',
-              id: 'colorByAlternative',
-              matchMeasure: 0,
-              colorMapRef: 'DSrjAGm'
-            }
-          ],
-          qAttrDimInfo: [],
-          qMeasureInfo: [
-            {
-              qFallbackTitle: '# of Products',
-              qApprMaxGlyphCount: 2,
-              qCardinal: 0,
-              qSortIndicator: 'D',
-              qNumFormat: {
-                qType: 'I',
-                qnDec: 0,
-                qUseThou: 1,
-                qFmt: '###0',
-                qDec: '.'
-              },
-              qMin: 0,
-              qMax: 17,
-              qIsAutoFormat: true,
-              qAttrExprInfo: [],
-              qAttrDimInfo: [],
-              autoSort: true,
-              cId: 'MbpvBQ',
-              numFormatFromTemplate: true
-            },
-            {
-              qFallbackTitle: 'Amount Overdue',
-              qApprMaxGlyphCount: 11,
-              qCardinal: 0,
-              qSortIndicator: 'D',
-              qNumFormat: {
-                qType: 'R',
-                qnDec: 0,
-                qUseThou: 0,
-                qFmt: '##############',
-                qDec: '.',
-                qThou: ','
-              },
-              qMin: 0,
-              qMax: 195765.2816000001,
-              qIsAutoFormat: true,
-              qAttrExprInfo: [],
-              qAttrDimInfo: [],
-              autoSort: true,
-              cId: 'YvFYB',
-              numFormatFromTemplate: true
-            }
-          ],
-          qCardinalities: {
-            qCardinal: 70,
-            qHypercubeCardinal: 5
-          },
-          title: 'Product Sub Group Desc',
-          autoSort: true,
-          cId: 'XBkuFYE',
-          othersLabel: 'Others'
-        }
-      ],
-      qEffectiveInterColumnSortOrder: [
-        0,
-        1
-      ],
-      qGrandTotalRow: [],
-      qTreeDataPages: treePages,
-      qTreeNodesOnDim: [
-        3,
-        6
-      ]
-    };
+    // const treePages = [
+    //   {
+    //     qElemNo: -1,
+    //     qNodeNr: 0,
+    //     qParentNode: -1,
+    //     qRow: 0,
+    //     qType: 'R',
+    //     qValues: [],
+    //     qNodes: [
+    //       {
+    //         qText: 'Alcoholic Beverages',
+    //         qElemNo: 0,
+    //         qNodeNr: 1,
+    //         qParentNode: 0,
+    //         qRow: 0,
+    //         qType: 'N',
+    //         qAttrDims: { qValues: [{}, { qElemNo: 3, qText: 'Alco' }] },
+    //         qValues: [{}, { qValue: 36, qText: '+36' }],
+    //         qNodes: [
+    //           {
+    //             qText: 'Beer',
+    //             qElemNo: 0,
+    //             qNodeNr: 4,
+    //             qParentNode: 1,
+    //             qRow: 0,
+    //             qType: 'N',
+    //             qAttrExps: { qValues: [{ qNum: 3, qText: 'three' }] },
+    //             qValues: [
+    //               {
+    //                 qText: '6',
+    //                 qValue: 6
+    //               },
+    //               {
+    //                 qText: '$171792',
+    //                 qValue: 171792
+    //               }
+    //             ],
+    //             qNodes: []
+    //           },
+    //           {
+    //             qText: 'Wine',
+    //             qElemNo: 1,
+    //             qNodeNr: 5,
+    //             qParentNode: 1,
+    //             qRow: 1,
+    //             qType: 'N',
+    //             qAttrExps: { qValues: [{ qNum: 2, qText: 'two' }] },
+    //             qValues: [
+    //               {
+    //                 qText: '17',
+    //                 qValue: 17
+    //               },
+    //               {
+    //                 qText: '$195765',
+    //                 qValue: 195765
+    //               }
+    //             ],
+    //             qNodes: []
+    //           }
+    //         ]
+    //       },
+    //       {
+    //         qText: 'Baked Goods',
+    //         qElemNo: 1,
+    //         qNodeNr: 2,
+    //         qParentNode: 0,
+    //         qRow: 2,
+    //         qType: 'N',
+    //         qAttrDims: { qValues: [{}, { qElemNo: 7, qText: 'Bake' }] },
+    //         qValues: [{}, { qValue: 31, qText: '+31' }],
+    //         qNodes: [
+    //           {
+    //             qText: 'Bagels',
+    //             qElemNo: 2,
+    //             qNodeNr: 6,
+    //             qParentNode: 2,
+    //             qRow: 2,
+    //             qType: 'N',
+    //             qAttrExps: { qValues: [{ qNum: 5, qText: 'five' }] },
+    //             qValues: [
+    //               {
+    //                 qText: '2',
+    //                 qValue: 2
+    //               },
+    //               {
+    //                 qText: '$22652',
+    //                 qValue: 22652
+    //               }
+    //             ],
+    //             qNodes: []
+    //           },
+    //           {
+    //             qText: 'Muffins',
+    //             qElemNo: 3,
+    //             qNodeNr: 7,
+    //             qParentNode: 2,
+    //             qRow: 3,
+    //             qType: 'N',
+    //             qAttrExps: { qValues: [{ qNum: 7, qText: 'seven' }] },
+    //             qValues: [
+    //               {
+    //                 qText: '9',
+    //                 qValue: 9
+    //               },
+    //               {
+    //                 qText: '$158937',
+    //                 qValue: 158937
+    //               }
+    //             ],
+    //             qNodes: []
+    //           },
+    //           {
+    //             qText: 'Sliced Bread',
+    //             qElemNo: 4,
+    //             qNodeNr: 8,
+    //             qParentNode: 2,
+    //             qRow: 4,
+    //             qType: 'N',
+    //             qAttrExps: { qValues: [{ qNum: 9, qText: 'nine' }] },
+    //             qValues: [
+    //               {
+    //                 qText: '13',
+    //                 qValue: 13
+    //               },
+    //               {
+    //                 qText: '$110661',
+    //                 qValue: 110661
+    //               }
+    //             ],
+    //             qNodes: []
+    //           }
+    //         ]
+    //       }
+    //     ]
+    //   }
+    // ];
+
+    const cube = configCube.cube.qHyperCube;
+    cube.qStackedDataPages = treePages;
+
+    // const cube = {
+    //   qDimensionInfo: [
+    //     {
+    //       qFallbackTitle: 'Product Group',
+    //       qApprMaxGlyphCount: 19,
+    //       qCardinal: 17,
+    //       qSortIndicator: 'A',
+    //       qGroupFallbackTitles: [
+    //         'Product Group'
+    //       ],
+    //       qGroupPos: 0,
+    //       qStateCounts: {
+    //         qLocked: 0,
+    //         qSelected: 2,
+    //         qOption: 0,
+    //         qDeselected: 0,
+    //         qAlternative: 15,
+    //         qExcluded: 0,
+    //         qSelectedExcluded: 0,
+    //         qLockedExcluded: 0
+    //       },
+    //       qTags: [
+    //         '$ascii',
+    //         '$text'
+    //       ],
+    //       qDimensionType: 'D',
+    //       qGrouping: 'N',
+    //       qNumFormat: {
+    //         qType: 'R',
+    //         qnDec: 14,
+    //         qUseThou: 1,
+    //         qFmt: '##############',
+    //         qDec: '.',
+    //         qThou: ','
+    //       },
+    //       qIsAutoFormat: true,
+    //       qGroupFieldDefs: [
+    //         'Product Group Desc'
+    //       ],
+    //       qMin: 'NaN',
+    //       qMax: 'NaN',
+    //       qAttrExprInfo: [],
+    //       qAttrDimInfo: [],
+    //       qCardinalities: {
+    //         qCardinal: 17,
+    //         qHypercubeCardinal: 2
+    //       },
+    //       title: 'Product Group',
+    //       coloring: {
+    //         colorMapRef: 'rAWLLGj',
+    //         changeHash: '0.6784502254237292'
+    //       },
+    //       autoSort: true,
+    //       cId: 'XKAuVu',
+    //       othersLabel: 'Others'
+    //     },
+    //     {
+    //       qFallbackTitle: 'Product Sub Group Desc',
+    //       qApprMaxGlyphCount: 17,
+    //       qCardinal: 70,
+    //       qSortIndicator: 'A',
+    //       qGroupFallbackTitles: [
+    //         'Product Sub Group Desc'
+    //       ],
+    //       qGroupPos: 0,
+    //       qStateCounts: {
+    //         qLocked: 0,
+    //         qSelected: 0,
+    //         qOption: 5,
+    //         qDeselected: 0,
+    //         qAlternative: 0,
+    //         qExcluded: 65,
+    //         qSelectedExcluded: 0,
+    //         qLockedExcluded: 0
+    //       },
+    //       qTags: [
+    //         '$ascii',
+    //         '$text'
+    //       ],
+    //       qDimensionType: 'D',
+    //       qGrouping: 'N',
+    //       qNumFormat: {
+    //         qType: 'R',
+    //         qnDec: 14,
+    //         qUseThou: 1,
+    //         qFmt: '##############',
+    //         qDec: '.',
+    //         qThou: ','
+    //       },
+    //       qIsAutoFormat: true,
+    //       qGroupFieldDefs: [
+    //         'Product Sub Group Desc'
+    //       ],
+    //       qMin: 'NaN',
+    //       qMax: 'NaN',
+    //       qAttrExprInfo: [
+    //         {
+    //           qMin: 18,
+    //           qMax: 83,
+    //           qFallbackTitle: '# of Customers',
+    //           qMinText: '18',
+    //           qMaxText: '83',
+    //           id: 'colorByAlternative',
+    //           matchMeasure: 0,
+    //           colorMapRef: 'DSrjAGm'
+    //         }
+    //       ],
+    //       qAttrDimInfo: [],
+    //       qMeasureInfo: [
+    //         {
+    //           qFallbackTitle: '# of Products',
+    //           qApprMaxGlyphCount: 2,
+    //           qCardinal: 0,
+    //           qSortIndicator: 'D',
+    //           qNumFormat: {
+    //             qType: 'I',
+    //             qnDec: 0,
+    //             qUseThou: 1,
+    //             qFmt: '###0',
+    //             qDec: '.'
+    //           },
+    //           qMin: 0,
+    //           qMax: 17,
+    //           qIsAutoFormat: true,
+    //           qAttrExprInfo: [],
+    //           qAttrDimInfo: [],
+    //           autoSort: true,
+    //           cId: 'MbpvBQ',
+    //           numFormatFromTemplate: true
+    //         },
+    //         {
+    //           qFallbackTitle: 'Amount Overdue',
+    //           qApprMaxGlyphCount: 11,
+    //           qCardinal: 0,
+    //           qSortIndicator: 'D',
+    //           qNumFormat: {
+    //             qType: 'R',
+    //             qnDec: 0,
+    //             qUseThou: 0,
+    //             qFmt: '##############',
+    //             qDec: '.',
+    //             qThou: ','
+    //           },
+    //           qMin: 0,
+    //           qMax: 195765.2816000001,
+    //           qIsAutoFormat: true,
+    //           qAttrExprInfo: [],
+    //           qAttrDimInfo: [],
+    //           autoSort: true,
+    //           cId: 'YvFYB',
+    //           numFormatFromTemplate: true
+    //         }
+    //       ],
+    //       qCardinalities: {
+    //         qCardinal: 70,
+    //         qHypercubeCardinal: 5
+    //       },
+    //       title: 'Product Sub Group Desc',
+    //       autoSort: true,
+    //       cId: 'XBkuFYE',
+    //       othersLabel: 'Others'
+    //     }
+    //   ],
+    //   qEffectiveInterColumnSortOrder: [
+    //     0,
+    //     1
+    //   ],
+    //   qGrandTotalRow: [],
+    //   qTreeDataPages: treePages,
+    //   qTreeNodesOnDim: [
+    //     3,
+    //     6
+    //   ]
+    // };
 
     const fields = [
       {
@@ -415,15 +428,29 @@ describe('q-data-extractor-t', () => {
       expect(m).to.eql([]);
     });
 
-    it('should return dim field values based on default field accessor', () => {
-      const m = extract({
-        field: 'qDimensionInfo/0'
-      }, dataset, {}, deps);
+    it.only('should return dim field values based on default field accessor', () => {
+      const suite = new Benchmark.Suite;
 
-      expect(m).to.eql([
-        { value: 0, label: 'Alcoholic Beverages', source: { key: 'cube', field: 'qDimensionInfo/0' } },
-        { value: 1, label: 'Baked Goods', source: { key: 'cube', field: 'qDimensionInfo/0' } }
-      ]);
+      // const m = extract({
+      //   field: 'qDimensionInfo/0'
+      // }, dataset, {}, deps);
+
+      suite.add('forEach extractor', () => {
+        extract({
+          field: 'qDimensionInfo/1'
+        }, dataset, {}, deps);
+      }).add('for extractor', () => {
+        fasterExtract({
+          field: 'qDimensionInfo/1'
+        }, dataset, {}, deps);
+      }).on('cycle', (event) => {
+        console.log(String(event.target));
+      }).run({ 'async': true });
+
+      // expect(m).to.eql([
+      //   { value: 0, label: 'Alcoholic Beverages', source: { key: 'cube', field: 'qDimensionInfo/0' } },
+      //   { value: 1, label: 'Baked Goods', source: { key: 'cube', field: 'qDimensionInfo/0' } }
+      // ]);
     });
 
     it('should return measure field values based on default field accessor', () => {
